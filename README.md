@@ -15,79 +15,59 @@ To run this action you'll need:
 
 ### 1. Create the release workflow
 
-Add a new workflow to your `.github/main.workflow` to trigger on `release`.
+Add a new workflow to your `.github/main.workflow` to trigger on `issue_comment`.
 
-<img src="https://user-images.githubusercontent.com/1192590/47112721-11578d80-d24f-11e8-8504-4864cd8d0c93.png" alt="new-workflow" width="300" />
+<img src="img/new-workflow.png" alt="new-workflow" width="300" />
 
 ### 2. Create the Action
 
-Create an action that uses this repository `bitoiu/release-notify-action@master` or points to Docker Hub at `docker://bitoiu/release-notifiy-action`
+Create an action that uses this repository `chzbrgr71/post-msteams@master` or points to Docker Hub at `docker://chzbrgr71/post-msteams`
 
-<img src="https://user-images.githubusercontent.com/1192590/47112720-11578d80-d24f-11e8-968d-bb3de5831ce8.png" alt="new-action" width="300" />
+In the Action, create a secret called `TEAMS_WEBHOOK_URL` with your specific url to the Teams Channel:
 
+<img src="img/webhook-secret.png" alt="webhook-secret" width="300" />
 
-### 3. Set the SendGrid secret
-
-Using the Visual Editor create a new secret on the action named `SENDGRID_API_TOKEN`. Set the value to your [SendGrid API Key](https://sendgrid.com/docs/ui/account-and-settings/api-keys/).
-
-<img src="https://user-images.githubusercontent.com/1192590/47112718-11578d80-d24f-11e8-8b97-544290ed5910.png" alt="new-secret" width="300" />
-
-### 4. Set the RECIPIENTS secret
-
-Do the same for a secret named `RECIPIENTS` that you need to set to the URI of the text file with the target recipients. The contents of the file should be a list of e-mails separated by newline, for example:
-
-```
-mona@github.com
-actions_are_awesome@github.com
-```
-
-If you don't know where to host this file, just go to [GitHub Gists](https://gist.github.com) and create a new textfile with the e-mails you want to target. After you save the file just click `raw` and get the URI of the file you've just created.
-
-### 5. Commit the changes
+### 3. Commit the changes
 
 Make sure you commit all pending changes. After you've done that your `main.workflow` should look similar to this:
 
 ```
-
-workflow "Release Notifier" {
-  on = "release"
-  resolves = ["Notify Releases"]
+workflow "Issue comment to MS Teams" {
+  on = "issue_comment"
+  resolves = ["chzbrgr71/post-msteams@master"]
 }
 
-action "Notify Releases" {
-  uses = "bitoiu/release-notify-action@master"
-  secrets = ["SENDGRID_API_TOKEN", "RECIPIENTS"]
+action "chzbrgr71/post-msteams@master" {
+  uses = "chzbrgr71/post-msteams@master"
+  secrets = ["TEAMS_WEBHOOK_URL"]
 }
-
 ```
 
 On the visual editor it should look similar to this:
 
-![visual editor](https://user-images.githubusercontent.com/1192590/47112717-10bef700-d24f-11e8-86a7-ef28d3d270c8.png)
+<img src="img/workflow.png" alt="workflow" width="300" />
 
-### 6. Test the workflow!
+### 4. Test the workflow!
 
-Create a new release for your repository and verify that the action triggers and that the e-mails were sent. Sometimes it's worth checking the spam inbox.
+Create an Issue in your repository and add a comment. You should now see a post to your Teams channel!
 
 ## Local testing
 
-The main script that does the heavy lifting is a NodeJS file. As such you can simply test it like any other node program, for example, running the following inside the `src` folder:
+The postmessage.py is the main program. You must set the below env var to run locally: `python postmessage.py`
 
 ```
-SENDGRID_API_TOKEN=XXX RECIPIENTS=ABSOLUTE_PATH_TO_TXT_FILE_WITH_RECIPIENTS GITHUB_EVENT_PATH=ABSOLUTE_PATH_TO_SAMPLE_PAYLOAD_FILE_PROVIDED node notify.js
+TEAMS_WEBHOOK_URL=https://outlook.office.com/....
 ```
 
 If you prefer to test the container directly (which is a tiny bit slower but more reliable) you can just run something like:
 
 ```
-docker build -t release . && docker run --env-file=./env release
+docker build -t repo/post-msteams:latest .
 ```
-
-Be sure to rename `env.template` to `env` and fill it with your environment variables.
 
 ## Pull Requests and Issues are Welcome
 
-If you're thinking of a dynamic e-mail template with substitutions, configurable TO and FROM addresses then you're just a pull request away. Feel free to share your ideas.
+Feel free to share your ideas.
 
 :octocat::heart:
 
