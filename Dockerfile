@@ -8,7 +8,7 @@ CMD ["python", "/postmessage.py"]
 
 LABEL "com.github.actions.name"="Post to MS Teams"
 LABEL "com.github.actions.description"="Action to post messages to a MS Teams channel based on Github issues."
-LABEL "com.github.actions.icon"="life-bouy"
+LABEL "com.github.actions.icon"="message-circle"
 LABEL "com.github.actions.color"="yellow"
 LABEL "repository"="https://github.com/chzbrgr71/post-msteams"
 LABEL "homepage"="https://github.com/chzbrgr71"
