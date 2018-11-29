@@ -6,7 +6,7 @@ import json
 # You must create the connectorcard object with the Microsoft Webhook URL
 myTeamsMessage = pymsteams.connectorcard(os.environ['TEAMS_WEBHOOK_URL'])
 
-with open('./event.json', 'r') as read_file:
+with open('/github/workflow/event.json', 'r') as read_file:
     data = json.load(read_file)
 
 message = 'A Github issue comment was posted. ' + data['comment']['body']
