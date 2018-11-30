@@ -13,6 +13,8 @@ To run this action you'll need:
 
 ## Setup
 
+> Note: This action currently supports a few specific GitHub events: push, issue, issue comment, and pull request. The type must be specified in a env variable in step #2.
+
 ### 1. Create the release workflow
 
 Add a new workflow to your `.github/main.workflow` to trigger on `issue_comment`.
@@ -27,6 +29,14 @@ In the Action, create a secret called `TEAMS_WEBHOOK_URL` with your specific url
 
 <img src="img/webhook-secret.png" alt="webhook-secret" width="300" />
 
+Add an event type environment varable called `GH_EVENT_TYPE`. As of now, this variable can be set to:
+- push
+- pull_request
+- issue_comment
+- issue
+
+<img src="img/env-var.png" alt="env-var" width="300" />
+
 ### 3. Commit the changes
 
 Make sure you commit all pending changes. After you've done that your `main.workflow` should look similar to this:
@@ -40,6 +50,9 @@ workflow "Issue comment to MS Teams" {
 action "chzbrgr71/post-msteams@master" {
   uses = "chzbrgr71/post-msteams@master"
   secrets = ["TEAMS_WEBHOOK_URL"]
+  env = {
+    GH_EVENT_TYPE = "push"
+  }
 }
 ```
 
