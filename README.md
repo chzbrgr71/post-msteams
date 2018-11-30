@@ -1,6 +1,6 @@
 ## post-msteams
 
-This repo contains a re-usable GitHub Action that when installed will post to Microsoft Teams details about GitHub issue comments.
+This repo contains a re-usable GitHub Action that when installed will post to Microsoft Teams details about various GitHub events.
 
 This Action makes use of https://github.com/rveachkc/pymsteams for the Python code for Teams.
 
